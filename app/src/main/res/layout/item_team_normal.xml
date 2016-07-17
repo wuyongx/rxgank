@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:layout_marginBottom="2dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginTop="2dp"
+    android:foreground="?android:attr/selectableItemBackground"
+    card_view:cardCornerRadius="4dp"
+    card_view:cardElevation="7dp"
+    card_view:cardUseCompatPadding="false"
+    >
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="horizontal"
+      >
+
+    <ImageView
+        android:id="@+id/iv_left"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="20dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/icon"
+        />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        >
+
+      <TextView
+          android:id="@+id/tv_title"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:singleLine="true"
+          tool:text="附件水电费绝色赌"
+          style="@style/TextAppearance.AppCompat.Subhead"
+          />
+
+      <android.support.v4.widget.Space
+          android:layout_width="wrap_content"
+          android:layout_height="0dp"
+          android:layout_weight="1"
+          />
+
+      <TextView
+          android:id="@+id/tv_content"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:textColor="#5DBAF6"
+          tool:text="附件水电费绝色赌商"
+          style="@style/TextAppearance.AppCompat.Subhead"
+          />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_get"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="20dp"
+        android:text="领取"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        />
+
+  </LinearLayout>
+</android.support.v7.widget.CardView>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <!-- Base application theme. -->
+
+  <style name="Theme.AppCompatTheme" parent="AppTheme.AppCompat">
+  </style>
+
+  <!-- Base application theme. -->
+  <style name="AppTheme.AppCompat" parent="Theme.AppCompat.Light.NoActionBar">
+    <!-- Customize your theme here. -->
+    <item name="colorPrimary">@color/colorPrimary</item>
+    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    <item name="colorAccent">@color/colorAccent</item>
+    <item name="android:windowSoftInputMode">stateHidden|adjustPan</item>
+    <item name="android:screenOrientation">portrait</item>
+    <item name="android:configChanges">orientation|keyboardHidden|screenSize</item>
+  </style>
+
+
+  <style name="AppTheme.AppCompat.SwipeBack">
+    <item name="android:windowIsTranslucent">true</item>
+  </style>
+
+</resources>

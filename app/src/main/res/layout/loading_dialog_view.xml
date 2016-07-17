@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="120dp"
+    android:layout_height="120dp"
+    android:background="#88ffffff"
+    android:orientation="vertical"
+    >
+  <com.wang.avi.AVLoadingIndicatorView
+      android:id="@+id/progressBar"
+      android:layout_width="50dp"
+      android:layout_height="50dp"
+      android:layout_gravity="center"
+      android:layout_marginBottom="10dp"
+      android:layout_marginTop="20dp"
+      android:gravity="center"
+      app:indicator="BallSpinFadeLoader"
+      app:indicator_color="#0092EB"
+      />
+
+  <TextView
+      android:id="@+id/tv_loading_msg"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center|bottom"
+      android:gravity="center"
+      android:text="@string/app_name"
+      android:textColor="@android:color/darker_gray"
+      android:textSize="12sp"
+      />
+
+</LinearLayout>
