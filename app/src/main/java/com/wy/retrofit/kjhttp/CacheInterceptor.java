@@ -31,7 +31,7 @@ public class CacheInterceptor implements Interceptor {
           .header("Cache-Control", cacheControl)
           .build();
     } else {
-      int maxStale = 60 * 60 * 24 * 28; // tolerate 4-weeks stale
+      int maxStale = 60 * 60 * 24 * 4 * 7; // tolerate 4-weeks stale
       return response.newBuilder()
           .removeHeader("Expires")
           .removeHeader("Cache-Control")
