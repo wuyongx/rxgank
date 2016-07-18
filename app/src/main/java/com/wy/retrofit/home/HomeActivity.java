@@ -1,5 +1,6 @@
 package com.wy.retrofit.home;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -24,12 +25,14 @@ import com.wy.retrofit.di.components.ActivityComponent;
 import com.wy.retrofit.kjhttp.rxjava.RetrofitClient;
 import com.wy.retrofit.util.FragmentationUtil;
 import com.wy.retrofit.util.L;
+import com.wy.retrofit.view.LoadingViewInterface;
 import javax.inject.Inject;
 import me.yokeyword.fragmentation.SupportFragment;
 import rx.Subscriber;
 
 public class HomeActivity extends BaseActivity
-    implements NavigationView.OnNavigationItemSelectedListener, OnTabClickListener {
+    implements NavigationView.OnNavigationItemSelectedListener, OnTabClickListener,
+    DialogInterface.OnDismissListener {
   private static final String[] TYPE = { "all", "Android", "休息视频" };
 
   private ActivityComponent mHomeComponent;
@@ -148,5 +151,13 @@ public class HomeActivity extends BaseActivity
   @Override protected void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     mBottomBar.onSaveInstanceState(outState);
+  }
+
+  @Override public void onDismiss(DialogInterface dialogInterface) {
+    HomeFragment homeFragment =
+        (HomeFragment) FragmentationUtil.getActiveFragment(null, getSupportFragmentManager());
+    if (homeFragment != null) {
+      ((LoadingViewInterface) homeFragment).resetLoadingUi();
+    }
   }
 }

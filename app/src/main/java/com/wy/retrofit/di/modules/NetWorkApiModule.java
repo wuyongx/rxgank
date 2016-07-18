@@ -31,7 +31,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 
     OkHttpClient.Builder builder = new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS)
         .readTimeout(10, TimeUnit.SECONDS)
-        .retryOnConnectionFailure(true);
+        .retryOnConnectionFailure(false);
       HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
       logging.setLevel(HttpLoggingInterceptor.Level.BODY);
       File cacheFile = FileUtil.getDiskCacheDir(App.getApp(), "OkCache");

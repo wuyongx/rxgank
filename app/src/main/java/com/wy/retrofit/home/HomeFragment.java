@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import butterknife.BindView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
+import com.orhanobut.logger.Logger;
 import com.wy.retrofit.R;
 import com.wy.retrofit.fragment.BaseFragment;
 import com.wy.retrofit.gank.GankInfo;
@@ -24,13 +25,14 @@ import com.wy.retrofit.kjhttp.rxjava.SampleSubscriber;
 import com.wy.retrofit.util.ResourceUtil;
 import com.wy.retrofit.util.Shares;
 import com.wy.retrofit.view.LoadType;
+import com.wy.retrofit.view.LoadingViewInterface;
 import java.util.List;
 import javax.inject.Inject;
 
 public class HomeFragment extends BaseFragment
     implements BaseQuickAdapter.RequestLoadMoreListener, SwipeRefreshLayout.OnRefreshListener,
     BaseQuickAdapter.OnRecyclerViewItemClickListener,
-    BaseQuickAdapter.OnRecyclerViewItemChildClickListener {
+    BaseQuickAdapter.OnRecyclerViewItemChildClickListener, LoadingViewInterface {
 
   @BindView(R.id.recycler_view) RecyclerView recyclerView;
   @BindView(R.id.swipe_layout) SwipeRefreshLayout swipeLayout;
@@ -41,6 +43,7 @@ public class HomeFragment extends BaseFragment
   private String type;
   private View noMoreDataView;
   private boolean canLoadMore;
+  private View mLoadingView;
 
   public static HomeFragment newInstance(String type) {
     Bundle bundle = new Bundle();
@@ -54,6 +57,7 @@ public class HomeFragment extends BaseFragment
   protected void initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.content_home, container, false);
     noMoreDataView = inflater.inflate(R.layout.not_loading, container, false);
+    mLoadingView = inflater.inflate(R.layout.loading_more, container, false);
     setContentView(view);
     //inject HomeFragment to Dagger graph, then inject field can be use
     ((HomeActivity) _mActivity).getHomeComponent()
@@ -87,35 +91,37 @@ public class HomeFragment extends BaseFragment
           @Override public void onNext(List<GankInfo> gank) {
             canLoadMore = true;
             if (loadType == LoadType.REFRESH) {
-              stopRefresh();
               adapter.setNewData(gank);
               recyclerView.scrollToPosition(0);
-              adapter.openLoadMore(20, true);
             } else {
-              adapter.addData(gank);
-              adapter.notifyDataChangedAfterLoadMore(true);
+              adapter.notifyDataChangedAfterLoadMore(gank, true);
             }
           }
 
           @Override public void onError(Throwable e) {
-            stopRefresh();
+            canLoadMore = false;
             if (loadType == LoadType.LOAD_MORE) {
-              adapter.notifyDataChangedAfterLoadMore(false);
-              adapter.addFooterView(noMoreDataView);
-            }
-            if (e instanceof DataException) {
-              canLoadMore = false;
-            } else if (e instanceof NetWorkException) {
-              page--;
+              if (e instanceof DataException) {//接口没返回数据
+                adapter.addFooterView(noMoreDataView);
+              } else if (e instanceof NetWorkException) {//网络异常或超时
+                page--;
+              }
             }
           }
         }));
   }
 
+  /**
+   * 关闭下拉和上拉刷新 view
+   */
   private void stopRefresh() {
+    if (swipeLayout == null || adapter == null) {
+      return;
+    }
     if (swipeLayout.isRefreshing()) {
       swipeLayout.setRefreshing(false);
     }
+    adapter.notifyDataChangedAfterLoadMore(canLoadMore);
   }
 
   private void setupRecyclerView(RecyclerView recyclerView) {
@@ -125,6 +131,8 @@ public class HomeFragment extends BaseFragment
     adapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_BOTTOM);
     adapter.setOnRecyclerViewItemClickListener(this);
     adapter.setOnRecyclerViewItemChildClickListener(this);
+    adapter.openLoadMore(20, true);
+    adapter.setLoadingView(mLoadingView);
     adapter.setOnLoadMoreListener(this);
     recyclerView.setAdapter(adapter);
   }
@@ -171,12 +179,17 @@ public class HomeFragment extends BaseFragment
     if (!TextUtils.isEmpty(searchKey)) {
       api.searchGank("all", searchKey)
           .compose(RetrofitClient.applySchedulers())
-          .subscribe(new ProgressSubscriber<>(_mActivity, this::setResult,null));
+          .subscribe(new ProgressSubscriber<>(_mActivity, this::setResult, null));
     }
   }
 
   public void setResult(List<GankInfo> gankInfos) {
     adapter.setNewData(gankInfos);
     recyclerView.scrollToPosition(0);
+  }
+
+  @Override public void resetLoadingUi() {
+    Logger.e(TAG, "restUi");
+    stopRefresh();
   }
 }

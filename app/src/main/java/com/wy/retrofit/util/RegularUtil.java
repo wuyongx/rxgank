@@ -17,7 +17,6 @@ public class RegularUtil {
     Matcher matcher = p.matcher(html);
     while (matcher.find()) {
       String url = matcher.group();
-      System.out.println(url);
       urls.add(url);
     }
     return urls;

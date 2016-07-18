@@ -35,11 +35,11 @@ public interface ApiService {
   Observable<GankResponse<GankInfo>> getGankList(
       @Path("all") String type, @Path("page") int page);
 
-  @Headers("Cache-Control: public, max-age=604800") // 搜索 本地保存7天
+  @Headers("Cache-Control: public, max-age=86400") // 搜索 本地保存1天  (7天604800)
   @GET("http://gank.io/api/data/{type}/1000000000/1")
   Observable<GankResponse<GankInfo>> searchGank(@Path("type") String type);
 
-  @Headers("Cache-Control: public, max-age=86400") // 保存1天
+  @Headers("Cache-Control: public, max-age=43200") // 保存0.5天
   @GET("http://gank.io/api/day/history")
   Observable<GankResponse<String>> getGankDate();
 

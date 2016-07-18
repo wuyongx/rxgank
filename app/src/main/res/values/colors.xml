@@ -8,5 +8,6 @@
   <color name="colorPrimaryDark_dark">#ff1e282d</color>
   <color name="alpha_80_black">#CC000000</color>
   <color name="tab_unselect">#c9c9c9</color>
+  <color name="text_gray">#c9c9c9</color>
   <color name="bg_btn">@android:color/white</color>
 </resources>

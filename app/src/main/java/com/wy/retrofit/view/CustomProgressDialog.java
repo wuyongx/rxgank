@@ -1,9 +1,9 @@
 package com.wy.retrofit.view;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatDialog;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.widget.TextView;
@@ -13,7 +13,7 @@ import com.wy.retrofit.R;
 /**
  * Created by wuyong on 16/7/13.
  */
-public class CustomProgressDialog extends Dialog {
+public class CustomProgressDialog extends AppCompatDialog {
 
   private TextView mContent;
   public static final String MSG = App.getApp().getString(R.string.msg_loading);

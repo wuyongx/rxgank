@@ -13,10 +13,12 @@ public class ToastUtil {
   public static void show(CharSequence content) {
     if (sToast != null && sToast.get() != null) {
       sToast.get().cancel();
+      sToast.get().show();
+    } else {
+      Toast toast = Toast.makeText(App.getApp(), content, Toast.LENGTH_SHORT);
+      sToast = new WeakReference<>(toast);
+      toast.show();
     }
-    Toast toast = Toast.makeText(App.getApp(), content, Toast.LENGTH_SHORT);
-    sToast = new WeakReference<Toast>(toast);
-    toast.show();
   }
 
   public static void cancel() {

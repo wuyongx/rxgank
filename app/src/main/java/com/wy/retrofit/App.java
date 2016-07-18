@@ -7,6 +7,7 @@ import android.support.multidex.MultiDex;
 import com.wy.retrofit.di.components.AppComponent;
 import com.wy.retrofit.di.components.DaggerAppComponent;
 import com.wy.retrofit.di.modules.AppModule;
+import com.wy.retrofit.kjhttp.rxjava.LibraryWrapper;
 
 public class App extends Application {
   private AppComponent mComponent;
@@ -27,6 +28,8 @@ public class App extends Application {
     super.onCreate();
     app = this;
     buildComponentAndInject();
+    // 初始化第三方库 Logger 日志库
+    LibraryWrapper.init(this,"Logger");
   }
 
   private void buildComponentAndInject() {

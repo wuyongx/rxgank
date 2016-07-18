@@ -36,13 +36,11 @@ public class ProgressSubscriber<T> extends Subscriber<T>
       String... loadingMsg) {
     this.sampleSubscriber = sampleSubscriber;
     mHelper = new DialogHelper(context);
-    if (loadingMsg != null && loadingMsg.length > 0 && !TextUtils.isEmpty(loadingMsg[0])) {
-      dialogMsg = loadingMsg[0];
-    }
+    setDialogMsg(loadingMsg);
   }
 
-  public ProgressSubscriber(Context context, @NonNull Action1<T> onNext,@Nullable Action1<Throwable> onError,
-      String... loadingMsg) {
+  public ProgressSubscriber(Context context, @NonNull Action1<T> onNext,
+      @Nullable Action1<Throwable> onError, String... loadingMsg) {
     this.sampleSubscriber = new SampleSubscriber<T>() {
       @Override public void onNext(T t) {
         onNext.call(t);
@@ -55,6 +53,10 @@ public class ProgressSubscriber<T> extends Subscriber<T>
       }
     };
     mHelper = new DialogHelper(context);
+    setDialogMsg(loadingMsg);
+  }
+
+  private void setDialogMsg(String[] loadingMsg) {
     if (loadingMsg != null && loadingMsg.length > 0 && !TextUtils.isEmpty(loadingMsg[0])) {
       dialogMsg = loadingMsg[0];
     }
