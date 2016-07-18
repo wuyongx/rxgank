@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import com.wy.retrofit.App;
 import com.wy.retrofit.R;
 import com.wy.retrofit.gank.Beatuty;
+import com.wy.retrofit.gank.CacheManager;
 import com.wy.retrofit.gank.GankInfo;
 import com.wy.retrofit.kjhttp.ApiService;
 import com.wy.retrofit.kjhttp.ParamAdapter;
@@ -158,10 +159,7 @@ import rx.schedulers.Schedulers;
       } else {
         throw new DataException(App.getApp().getString(R.string.msg_no_data));
       }
-    }).flatMap(Observable::from)
-        .filter(gank -> gank.filter(key))
-        .toList()
-        .map(list -> {
+    }).flatMap(Observable::from).filter(gank -> gank.filter(key)).toList().map(list -> {
       if (list.isEmpty()) {
         throw new DataException(App.getApp().getString(R.string.msg_no_data));
       } else {
@@ -180,8 +178,9 @@ import rx.schedulers.Schedulers;
           }
         })
         .flatMap(date -> {
-          String[] str = date.split("-");
-          return mService.getGankMeizi(str[0], str[1], str[2]);
+          date = date.replace("-", "/");
+          return mService.getGankMeizi(date,
+              CacheManager.getInstance().getCacheMaxAge(date, "daily_meizi"));
         })
         .map(response -> {
           if (response.success()) {

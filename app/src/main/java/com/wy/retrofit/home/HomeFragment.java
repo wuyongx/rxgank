@@ -90,21 +90,22 @@ public class HomeFragment extends BaseFragment
         new ProgressSubscriber<>(_mActivity, new SampleSubscriber<List<GankInfo>>() {
           @Override public void onNext(List<GankInfo> gank) {
             canLoadMore = true;
-            if (loadType == LoadType.REFRESH) {
+            page++;// 数据加载成功,为上拉加载页码+1
+            if (loadType == LoadType.REFRESH) {//下拉刷新
               adapter.setNewData(gank);
               recyclerView.scrollToPosition(0);
-            } else {
+            } else {//上拉加载
               adapter.notifyDataChangedAfterLoadMore(gank, true);
             }
           }
 
           @Override public void onError(Throwable e) {
-            canLoadMore = false;
-            if (loadType == LoadType.LOAD_MORE) {
-              if (e instanceof DataException) {//接口没返回数据
-                adapter.addFooterView(noMoreDataView);
-              } else if (e instanceof NetWorkException) {//网络异常或超时
+            if (loadType == LoadType.LOAD_MORE) {//处理上拉加载
+              if (e instanceof NetWorkException) {//网络异常或超时
                 page--;
+              } else if (e instanceof DataException) {//接口没返回数据
+                canLoadMore = false;
+                adapter.addFooterView(noMoreDataView);
               }
             }
           }
@@ -141,7 +142,6 @@ public class HomeFragment extends BaseFragment
     if (!canLoadMore) {
       return;
     }
-    page++;
     getGank(LoadType.LOAD_MORE);
   }
 
