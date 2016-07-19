@@ -3,7 +3,6 @@ package com.wy.retrofit.kjhttp.rxjava;
 import android.support.annotation.NonNull;
 import com.wy.retrofit.App;
 import com.wy.retrofit.R;
-import com.wy.retrofit.gank.Beatuty;
 import com.wy.retrofit.gank.CacheManager;
 import com.wy.retrofit.gank.GankInfo;
 import com.wy.retrofit.kjhttp.ApiService;
@@ -132,18 +131,18 @@ import rx.schedulers.Schedulers;
         .subscribe(subscriber);
   }
 
-  public void getBeauties(int page, Subscriber<List<Beatuty>> subscriber) {
-    mService.getBeauties(10, page).map(response -> {
-      if (response.success()) {
-        return response.results;
-      } else {
-        throw new DataException(App.getApp().getString(R.string.msg_no_more_data));
-      }
-    }).compose(applySchedulers()).subscribe(subscriber);
-  }
-
   public void getGankList(String type, int page, Subscriber<List<GankInfo>> subscriber) {
-    mService.getGankList(type, page).map(response -> {
+    mService.getGankDate().map(response -> {
+      if (response.success()) {
+        return response.results.get(0);
+      } else {
+        throw new DataException(App.getApp().getString(R.string.msg_no_data));
+      }
+    }).flatMap(date -> {
+      date = date.replace("-", "/");
+      return mService.getGankList(type, page,
+          CacheManager.getInstance().getCacheMaxAge(date, "gank_list"));
+    }).map(response -> {
       if (response.success()) {
         return response.results;
       } else {
@@ -153,7 +152,18 @@ import rx.schedulers.Schedulers;
   }
 
   public Observable<List<GankInfo>> searchGank(String type, String key) {
-    return mService.searchGank(type).subscribeOn(Schedulers.io()).map(response -> {
+
+    return mService.getGankDate().map(response -> {
+      if (response.success()) {
+        return response.results.get(0);
+      } else {
+        throw new DataException(App.getApp().getString(R.string.msg_no_data));
+      }
+    }).flatMap(date -> {
+      date = date.replace("-", "/");
+      return mService.searchGank(type,
+          CacheManager.getInstance().getCacheMaxAge(date, "gank_search"));
+    }).subscribeOn(Schedulers.io()).map(response -> {
       if (response.success()) {
         return response.results;
       } else {
