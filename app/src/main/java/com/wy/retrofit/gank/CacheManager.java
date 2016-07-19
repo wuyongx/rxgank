@@ -26,7 +26,7 @@ public class CacheManager {
     return instance;
   }
 
-  public void saveLastDate(String date) {
+  private void saveLastDate(String date) {
     editor.lastDate().put(date);
   }
 
@@ -37,8 +37,8 @@ public class CacheManager {
         String cache = editor.lastDate().get("0");//取出保存的数据日期
 
         if (cache.compareTo(date) < 0) {//有新数据
-          cacheMaxAge += "0";
-          CacheManager.getInstance().saveLastDate(date);//保存最新 数据日期
+          cacheMaxAge += 0;
+          saveLastDate(date);//保存最新 数据日期
         } else {//已经是最新数据
           cacheMaxAge += 60 * 60 * 60 * 6;//6小时
         }
