@@ -81,7 +81,6 @@ import rx.schedulers.Schedulers;
   /**
    * 用来处理Http的response ,将HttpResponse的Data部分剥离出来返回给subscriber
    *
-   * @param <T> Subscriber真正需要的数据类型，Data数据类型
    */
   private static class GetResponseData<T> implements Func1<Wrapper<T>, T> {
     @Override public T call(Wrapper<T> response) {
@@ -124,7 +123,7 @@ import rx.schedulers.Schedulers;
 
   public void getTeacherLifeCircle(ReqTeacherLifeCircle req,
       Subscriber<RespArrayWrapper<TeacherLifeCircleInfo>> subscriber) {
-    createParam(req).flatMap(map -> mService.getTeacherLifeCircle2(map))
+         createParam(req).flatMap(map -> mService.getTeacherLifeCircle2(map))
         .map(new GetResponseData<>())
         .map(new GetRespArrayData<>())
         .compose(applySchedulers())

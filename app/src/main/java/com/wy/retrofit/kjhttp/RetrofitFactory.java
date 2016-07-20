@@ -14,10 +14,10 @@ public class RetrofitFactory {
 
   /**
    * @param clazz 目标接口 class
-   * @param baseUrl BaseUrl  @return 返回目标接口的具体实例
+   * @param baseUrl BaseUrl
    * @param client OKHttp client
    * @param gson Gson
-   * @return RetrofitService
+   * @return RetrofitService 返回目标接口的具体实例
    */
   @SuppressWarnings("unchecked") public static <T> T createService(@NonNull Class<?> clazz,
       @NonNull String baseUrl, @NonNull OkHttpClient client, @NonNull Gson gson) {
