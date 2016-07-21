@@ -80,7 +80,6 @@ import rx.schedulers.Schedulers;
 
   /**
    * 用来处理Http的response ,将HttpResponse的Data部分剥离出来返回给subscriber
-   *
    */
   private static class GetResponseData<T> implements Func1<Wrapper<T>, T> {
     @Override public T call(Wrapper<T> response) {
@@ -123,7 +122,7 @@ import rx.schedulers.Schedulers;
 
   public void getTeacherLifeCircle(ReqTeacherLifeCircle req,
       Subscriber<RespArrayWrapper<TeacherLifeCircleInfo>> subscriber) {
-         createParam(req).flatMap(map -> mService.getTeacherLifeCircle2(map))
+    createParam(req).flatMap(map -> mService.getTeacherLifeCircle(map))
         .map(new GetResponseData<>())
         .map(new GetRespArrayData<>())
         .compose(applySchedulers())
@@ -131,54 +130,67 @@ import rx.schedulers.Schedulers;
   }
 
   public void getGankList(String type, int page, Subscriber<List<GankInfo>> subscriber) {
-    mService.getGankDate().map(response -> {
-      if (response.success()) {
-        return response.results.get(0);
-      } else {
-        throw new DataException(App.getApp().getString(R.string.msg_no_data));
-      }
-    }).flatMap(date -> {
-      date = date.replace("-", "/");
-      return mService.getGankList(type, page,
-          CacheManager.getInstance().getCacheMaxAge(date, "gank_list"));
-    }).map(response -> {
-      if (response.success()) {
-        return response.results;
-      } else {
-        throw new DataException(App.getApp().getString(R.string.msg_no_more_data));
-      }
-    }).compose(applySchedulers()).subscribe(subscriber);
+    mService.getGankDate(CacheManager.getInstance().getCacheMaxAge("", "gank_history"))
+        .map(response -> {
+          if (response.success()) {
+            return response.results.get(0);
+          } else {
+            throw new DataException(App.getApp().getString(R.string.msg_no_data));
+          }
+        })
+        .flatMap(date -> {
+          date = date.replace("-", "/");
+          return mService.getGankList(type, page,
+              CacheManager.getInstance().getCacheMaxAge(date, "gank_list"));
+        })
+        .map(response -> {
+          if (response.success()) {
+            return response.results;
+          } else {
+            throw new DataException(App.getApp().getString(R.string.msg_no_more_data));
+          }
+        })
+        .compose(applySchedulers())
+        .subscribe(subscriber);
   }
 
   public Observable<List<GankInfo>> searchGank(String type, String key) {
 
-    return mService.getGankDate().map(response -> {
-      if (response.success()) {
-        return response.results.get(0);
-      } else {
-        throw new DataException(App.getApp().getString(R.string.msg_no_data));
-      }
-    }).flatMap(date -> {
-      date = date.replace("-", "/");
-      return mService.searchGank(type,
-          CacheManager.getInstance().getCacheMaxAge(date, "gank_search"));
-    }).subscribeOn(Schedulers.io()).map(response -> {
-      if (response.success()) {
-        return response.results;
-      } else {
-        throw new DataException(App.getApp().getString(R.string.msg_no_data));
-      }
-    }).flatMap(Observable::from).filter(gank -> gank.filter(key)).toList().map(list -> {
-      if (list.isEmpty()) {
-        throw new DataException(App.getApp().getString(R.string.msg_no_data));
-      } else {
-        return list;
-      }
-    });
+    return mService.getGankDate(CacheManager.getInstance().getCacheMaxAge("", "gank_history"))
+        .map(response -> {
+          if (response.success()) {
+            return response.results.get(0);
+          } else {
+            throw new DataException(App.getApp().getString(R.string.msg_no_data));
+          }
+        })
+        .flatMap(date -> {
+          date = date.replace("-", "/");
+          return mService.searchGank(type,
+              CacheManager.getInstance().getCacheMaxAge(date, "gank_search"));
+        })
+        .subscribeOn(Schedulers.io())
+        .map(response -> {
+          if (response.success()) {
+            return response.results;
+          } else {
+            throw new DataException(App.getApp().getString(R.string.msg_no_data));
+          }
+        })
+        .flatMap(Observable::from)
+        .filter(gank -> gank.filter(key))
+        .toList()
+        .map(list -> {
+          if (list.isEmpty()) {
+            throw new DataException(App.getApp().getString(R.string.msg_no_data));
+          } else {
+            return list;
+          }
+        });
   }
 
   public void getMeizi(Subscriber<String> subscriber) {
-    mService.getGankDate()
+    mService.getGankDate(CacheManager.getInstance().getCacheMaxAge("", "gank_history"))
         .map(response -> {
           if (response.success()) {
             return response.results.get(0);

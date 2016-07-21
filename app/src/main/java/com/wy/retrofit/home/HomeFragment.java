@@ -95,11 +95,13 @@ public class HomeFragment extends BaseFragment
               adapter.setNewData(gank);
               recyclerView.scrollToPosition(0);
             } else {//上拉加载
-              adapter.notifyDataChangedAfterLoadMore(gank, true);
+              adapter.notifyDataChangedAfterLoadMore(gank, canLoadMore);
             }
           }
 
           @Override public void onError(Throwable e) {
+
+            //TODO HttpException : 504 HTTP 504 Unsatisfiable Request (only-if-cached)
             if (loadType == LoadType.LOAD_MORE) {//处理上拉加载
               if (e instanceof NetWorkException) {//网络异常或超时
                 page--;

@@ -1,6 +1,8 @@
 package com.wy.retrofit.gank;
 
+import android.support.annotation.NonNull;
 import com.wy.retrofit.App;
+import com.wy.retrofit.util.NetworkUtil;
 
 /**
  * Created by wuyong on 16/7/18.
@@ -30,8 +32,18 @@ public class CacheManager {
     editor.lastDate().put(date);
   }
 
-  public String getCacheMaxAge(String date, String cacheType) {
+  public String getCacheMaxAge(@NonNull String date, String cacheType) {
     String cacheMaxAge = "public, max-age=";
+    int anHour = 60 * 60;
+    if ("gank_history".equals(cacheType)) {
+      if (NetworkUtil.isNetworkAvailable()) {
+        cacheMaxAge += 0;
+      } else {
+        cacheMaxAge += anHour * 12;//12小时
+      }
+      return cacheMaxAge;
+    }
+
     String cache = editor.lastDate().get("0");//取出保存的数据日期
     if (cache.compareTo(date) < 0) {//有新数据
       cacheMaxAge += 0;
@@ -43,10 +55,10 @@ public class CacheManager {
     switch (cacheType) {
       case "daily_meizi":
       case "gank_list":
-        cacheMaxAge += 60 * 60 * 60 * 12;//12小时
+        cacheMaxAge += anHour * 12;//12小时
         break;
       case "gank_search":
-        cacheMaxAge += 60 * 60 * 60 * 24 * 7;// 7天
+        cacheMaxAge += anHour * 24 * 7;// 7天
         break;
     }
     return cacheMaxAge;

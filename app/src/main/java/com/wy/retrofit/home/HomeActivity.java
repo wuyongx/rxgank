@@ -25,7 +25,6 @@ import com.wy.retrofit.di.components.ActivityComponent;
 import com.wy.retrofit.kjhttp.rxjava.RetrofitClient;
 import com.wy.retrofit.util.FragmentationUtil;
 import com.wy.retrofit.util.L;
-import com.wy.retrofit.view.LoadingViewInterface;
 import javax.inject.Inject;
 import me.yokeyword.fragmentation.SupportFragment;
 import rx.Subscriber;
@@ -157,7 +156,7 @@ public class HomeActivity extends BaseActivity
     HomeFragment homeFragment =
         (HomeFragment) FragmentationUtil.getActiveFragment(null, getSupportFragmentManager());
     if (homeFragment != null) {
-      ((LoadingViewInterface) homeFragment).resetLoadingUi();
+      homeFragment.resetLoadingUi();
     }
   }
 }

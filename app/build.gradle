@@ -5,7 +5,7 @@ apply plugin: 'me.tatarka.retrolambda'
 
 android {
   compileSdkVersion 24
-  buildToolsVersion "24.0.0"
+  buildToolsVersion "24.0.1"
   signingConfigs {
     release {
       storeFile file(RELEASE_STORE_FILE)
@@ -119,8 +119,8 @@ dependencies {
   apt 'me.yokeyword.smartsharedpreferences:compiler:1.0.0'
   compile 'me.yokeyword.smartsharedpreferences:api:1.0.0'
   //Fragment 的封装库
-  compile 'me.yokeyword:fragmentation:0.7.7'
-  compile 'me.yokeyword:fragmentation-swipeback:0.3.1'
+  compile 'me.yokeyword:fragmentation:0.7.8'
+  compile 'me.yokeyword:fragmentation-swipeback:0.3.2'
 
   //tencent bugly
   compile 'com.tencent.bugly:crashreport:latest.release'
