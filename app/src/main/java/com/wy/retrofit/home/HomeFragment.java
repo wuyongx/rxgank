@@ -18,7 +18,6 @@ import com.wy.retrofit.R;
 import com.wy.retrofit.fragment.BaseFragment;
 import com.wy.retrofit.gank.GankInfo;
 import com.wy.retrofit.kjhttp.rxjava.DataException;
-import com.wy.retrofit.kjhttp.rxjava.NetWorkException;
 import com.wy.retrofit.kjhttp.rxjava.ProgressSubscriber;
 import com.wy.retrofit.kjhttp.rxjava.RetrofitClient;
 import com.wy.retrofit.kjhttp.rxjava.SampleSubscriber;
@@ -103,9 +102,7 @@ public class HomeFragment extends BaseFragment
 
             //TODO HttpException : 504 HTTP 504 Unsatisfiable Request (only-if-cached)
             if (loadType == LoadType.LOAD_MORE) {//处理上拉加载
-              if (e instanceof NetWorkException) {//网络异常或超时
-                page--;
-              } else if (e instanceof DataException) {//接口没返回数据
+              if (e instanceof DataException) {//接口没返回数据
                 canLoadMore = false;
                 adapter.addFooterView(noMoreDataView);
               }
